@@ -29,9 +29,9 @@ public class SensorService {
         sensorRepository.save(sensor);
     }
 
-    public Optional<Sensor> findSensorById(int id){
+    public Sensor findSensorById(int id){
         Optional<Sensor> optionalSensor = sensorRepository.findById(id);
-        return Optional.ofNullable(optionalSensor.orElseThrow(SensorNotFoundException::new));
+        return optionalSensor.orElseThrow(SensorNotFoundException::new);
     }
 
     public Sensor convertToSensor(SensorDTO sensorDTO){
@@ -41,7 +41,12 @@ public class SensorService {
         return sensor;
     }
 
-    public SensorDTO convertToSensorDTO(Optional<Sensor> sensor){
+    public SensorDTO convertToSensorDTO(Sensor sensor){
         return modelMapper.map(sensor, SensorDTO.class);
+    }
+
+    public Sensor findSensorByName(String name){
+        Optional<Sensor> optionalSensor = sensorRepository.findByName(name);
+        return optionalSensor.orElseThrow(SensorNotFoundException::new);
     }
 }

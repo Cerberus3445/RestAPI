@@ -1,18 +1,19 @@
 package org.project3.restapi.dto;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.validation.constraints.NotEmpty;
-import org.project3.restapi.models.Sensor;
+import jakarta.validation.constraints.*;
 
 public class MeasurementDTO {
-    @NotEmpty(message = "Value should not be empty1`")
+
+    @NotNull(message = "Value should not be empty")
+    @DecimalMin(value = "-100.00", message = "dsdsds")
     private double value;
 
+
+    @NotNull(message = "Raining field should not be empty")
     private boolean raining;
 
-    private Sensor sensor;
+    @NotNull(message = "Sensor name should not be empty")
+    private SensorDTO sensorDTO;
 
     public double getValue() {
         return value;
@@ -30,11 +31,11 @@ public class MeasurementDTO {
         this.raining = raining;
     }
 
-    public Sensor getSensor() {
-        return sensor;
+    public SensorDTO getSensorDTO() {
+        return sensorDTO;
     }
 
-    public void setSensor(Sensor sensor) {
-        this.sensor = sensor;
+    public void setSensorDTO(SensorDTO sensorDTO) {
+        this.sensorDTO = sensorDTO;
     }
 }
