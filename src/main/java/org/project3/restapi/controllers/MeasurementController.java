@@ -3,6 +3,7 @@ package org.project3.restapi.controllers;
 import jakarta.validation.Valid;
 import org.project3.restapi.dto.MeasurementDTO;
 import org.project3.restapi.dto.SensorDTO;
+import org.project3.restapi.exception.MeasurementNotCreatedException;
 import org.project3.restapi.exception.SensorNotFoundException;
 import org.project3.restapi.models.Measurement;
 import org.project3.restapi.services.MeasurementService;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -38,7 +40,12 @@ public class MeasurementController {
     @PostMapping("/add")
     public ResponseEntity<HttpStatus> addNewMeasurement(@RequestBody @Valid MeasurementDTO measurementDTO, BindingResult bindingResult){
         if(bindingResult.hasErrors()){
-
+            StringBuilder stringBuilder = new StringBuilder();
+            List<FieldError> fieldErrorList = bindingResult.getFieldErrors();
+            for(FieldError fieldError : fieldErrorList){
+                stringBuilder.append(fieldError.getField()).append(" - ").append(fieldError.getDefaultMessage()).append("; ");
+            }
+            throw new MeasurementNotCreatedException(stringBuilder.toString());
         }
         measurementService.addMeasurement(measurementDTO);
         return ResponseEntity.ok(HttpStatus.OK);
@@ -49,5 +56,9 @@ public class MeasurementController {
         SensorErrorResponse sensorErrorResponse = new SensorErrorResponse(System.currentTimeMillis(), "Sensor with this name wasn't found");
         return new ResponseEntity<>(sensorErrorResponse, HttpStatus.BAD_REQUEST);
     }
-
+    @ExceptionHandler
+    public ResponseEntity<SensorErrorResponse> handlerException(MeasurementNotCreatedException measurementNotCreatedException){
+        SensorErrorResponse sensorErrorResponse = new SensorErrorResponse(System.currentTimeMillis(), measurementNotCreatedException.getMessage());
+        return new ResponseEntity<>(sensorErrorResponse, HttpStatus.BAD_REQUEST);
+    }
 }

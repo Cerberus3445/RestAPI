@@ -5,7 +5,8 @@ import jakarta.validation.constraints.*;
 public class MeasurementDTO {
 
     @NotNull(message = "Value should not be empty")
-    @DecimalMin(value = "-100.00", message = "dsdsds")
+    @Min(value = -100, message = "min 100")
+    @Max(value = 100, message = "max 100")
     private double value;
 
 
