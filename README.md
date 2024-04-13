@@ -1,1 +1,1 @@
-Spring REST, Spring Data Jpa, Hibernate, PostgreSQL
+Spring REST, Spring Data Jpa, Hibernate, PostgreSQL, Maven
